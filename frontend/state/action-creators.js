@@ -15,7 +15,9 @@ export function selectAnswer(answer_id) {
   return { type: types.SET_SELECTED_ANSWER, payload: id };
 }
 
-export function setMessage() {}
+export function setMessage(message) {
+  return { type: types.SET_INFO_MESSAGE, payload: message };
+}
 
 export function setQuiz() {}
 
@@ -24,7 +26,9 @@ export function inputChange(name, value) {
   return { type: types.INPUT_CHANGE, payload: { name, value } };
 }
 
-export function resetForm() {}
+export function resetForm() {
+  return { type: types.RESET_FORM };
+}
 
 // ❗ Async action creators
 export function fetchQuiz() {
@@ -43,8 +47,20 @@ export function fetchQuiz() {
     // - Dispatch an action to send the obtained quiz to its state
   };
 }
-export function postAnswer() {
+export function postAnswer(payload) {
   return function (dispatch) {
+    axios
+      .post("http://localhost:9000/api/quiz/new", payload)
+      .then((response) => {
+        dispatch(
+          setMessage(
+            `Congrats: "${response.data.question}" is a great question!`
+          )
+        );
+      })
+      .then(() => dispatch(resetForm()))
+      .catch((error) => console.log(error));
+
     // On successful POST:
     // - Dispatch an action to reset the selected answer state
     // - Dispatch an action to set the server message to state
