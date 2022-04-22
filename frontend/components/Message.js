@@ -1,5 +1,13 @@
-import React from 'react'
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import * as actions from "../state/action-creators";
 
-export default function Message(props) {
-  return <div id="message">Nice job!</div>
+function Message(props) {
+  const { infoMessage, fetchQuiz } = props;
+  useEffect(() => {
+    fetchQuiz();
+  }, []);
+  return <div id="message">{infoMessage}</div>;
 }
+
+export default connect((state) => state, actions)(Message);

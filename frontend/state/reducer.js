@@ -38,14 +38,28 @@ function quiz(state = initialQuizState, action) {
   }
 }
 
-const initialSelectedAnswerState = null;
+const initialSelectedAnswerState = "empty";
 function selectedAnswer(state = initialSelectedAnswerState, action) {
-  return state;
+  switch (action.type) {
+    case types.SET_SELECTED_ANSWER: {
+      const newState = action.payload;
+      return newState;
+    }
+    default:
+      return state;
+  }
 }
 
 const initialMessageState = "";
 function infoMessage(state = initialMessageState, action) {
-  return state;
+  switch (action.type) {
+    case types.SET_INFO_MESSAGE: {
+      return action.payload;
+    }
+
+    default:
+      return state;
+  }
 }
 
 const initialFormState = {

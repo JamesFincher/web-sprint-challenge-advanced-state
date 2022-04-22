@@ -3,11 +3,22 @@ import { connect } from "react-redux";
 import * as actions from "../state/action-creators";
 
 function Quiz(props) {
-  const { fetchQuiz, selectAnswer, postAnswer, quiz, selectedAnswer } = props;
+  const {
+    fetchQuiz,
+    selectAnswer,
+    postAnswer,
+    postQuiz,
+    quiz,
+    selectedAnswer,
+  } = props;
 
-  useEffect(() => {
-    props.fetchQuiz();
-  }, []);
+  const handleSetAnswer = (answerId) => {
+    selectAnswer(answerId);
+  };
+  const submitHandler = (e) => {
+    e.preventDefault();
+    postQuiz(quiz.quiz_id, selectedAnswer);
+  };
 
   return (
     <div id="wrapper">
@@ -20,18 +31,47 @@ function Quiz(props) {
             <h2>{quiz.question}</h2>
 
             <div id="quizAnswers">
-              <div className="answer selected">
+              <div
+                className={`${
+                  selectedAnswer === quiz.answers[0].answer_id
+                    ? "answer selected"
+                    : "answer"
+                }`}
+              >
                 {quiz.answers[0].text}
-                <button>SELECTED</button>
+                <button
+                  onClick={() => handleSetAnswer(quiz.answers[0].answer_id)}
+                >
+                  {selectedAnswer === quiz.answers[0].answer_id
+                    ? "SELECTED"
+                    : "Select"}
+                </button>
               </div>
 
-              <div className="answer">
+              <div
+                className={`${
+                  selectedAnswer === quiz.answers[1].answer_id
+                    ? "answer selected"
+                    : "answer"
+                }`}
+                onClick={() => handleSetAnswer(quiz.answers[1].answer_id)}
+              >
                 {quiz.answers[1].text}
-                <button>Select</button>
+                <button>
+                  {selectedAnswer === quiz.answers[1].answer_id
+                    ? "SELECTED"
+                    : "Select"}
+                </button>
               </div>
             </div>
 
-            <button id="submitAnswerBtn">Submit answer</button>
+            <button
+              disabled={selectedAnswer === "empty" ? true : false}
+              id="submitAnswerBtn"
+              onClick={submitHandler}
+            >
+              Submit answer
+            </button>
           </>
         )
       }

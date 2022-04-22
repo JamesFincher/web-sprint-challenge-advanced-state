@@ -10,7 +10,10 @@ export function moveCounterClockwise() {
   return { type: types.MOVE_COUNTERCLOCKWISE, payload: {} };
 }
 
-export function selectAnswer() {}
+export function selectAnswer(answer_id) {
+  const id = answer_id;
+  return { type: types.SET_SELECTED_ANSWER, payload: id };
+}
 
 export function setMessage() {}
 
@@ -45,11 +48,25 @@ export function postAnswer() {
     // - Dispatch the fetching of the next quiz
   };
 }
-export function postQuiz() {
+export function postQuiz(quiz_id, selectedAnswer) {
   return function (dispatch) {
-    // On successful POST:
-    // - Dispatch the correct message to the the appropriate state
-    // - Dispatch the resetting of the form
+    axios
+      .post("http://localhost:9000/api/quiz/answer", {
+        quiz_id: quiz_id,
+        answer_id: selectedAnswer,
+      })
+      .then((response) => {
+        dispatch({
+          type: types.SET_INFO_MESSAGE,
+          payload: response.data.message,
+        });
+      })
+      .then(() => dispatch(fetchQuiz()))
+      .catch((error) => console.log(error));
   };
+
+  // On successful POST:
+  // - Dispatch the correct message to the the appropriate state
+  // - Dispatch the resetting of the form
 }
 // ❗ On promise rejections, use log statements or breakpoints, and put an appropriate error message in state
