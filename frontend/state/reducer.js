@@ -56,7 +56,6 @@ function infoMessage(state = initialMessageState, action) {
     case types.SET_INFO_MESSAGE: {
       return action.payload;
     }
-
     default:
       return state;
   }
@@ -68,7 +67,16 @@ const initialFormState = {
   newFalseAnswer: "",
 };
 function form(state = initialFormState, action) {
-  return state;
+  switch (action.type) {
+    case types.INPUT_CHANGE: {
+      return { ...state, [action.payload.name]: action.payload.value };
+    }
+    case types.RESET_FORM: {
+      return initialFormState;
+    }
+    default:
+      return state;
+  }
 }
 
 export default combineReducers({
